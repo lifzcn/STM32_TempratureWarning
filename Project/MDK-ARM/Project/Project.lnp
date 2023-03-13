@@ -8,6 +8,7 @@
 "project\gpio.o"
 "project\i2c.o"
 "project\tim.o"
+"project\usart.o"
 "project\stm32f1xx_it.o"
 "project\stm32f1xx_hal_msp.o"
 "project\stm32f1xx_hal_gpio_ex.o"
@@ -24,6 +25,7 @@
 "project\stm32f1xx_hal_exti.o"
 "project\stm32f1xx_hal_tim.o"
 "project\stm32f1xx_hal_tim_ex.o"
+"project\stm32f1xx_hal_uart.o"
 "project\system_stm32f1xx.o"
 --library_type=microlib --strict --scatter "Project\Project.sct"
 --summary_stderr --info summarysizes --map --load_addr_map_info --xref --callgraph --symbols
