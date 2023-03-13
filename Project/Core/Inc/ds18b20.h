@@ -1,7 +1,7 @@
 #ifndef __DS18B20_H__
 #define __DS18B20_H__
 
-#include "stm32f4xx_hal.h"
+#include "stm32f1xx_hal.h"
 #include "main.h"
 
 #define DS18B20_DQ_OUT_HIGH HAL_GPIO_WritePin(DS18B20_GPIO_Port,DS18B20_Pin,GPIO_PIN_SET)

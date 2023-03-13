@@ -1,7 +1,7 @@
 #ifndef __OLED_H__
 #define __OLED_H__
 
-#include "stm32f4xx_hal.h"
+#include "stm32f1xx_hal.h"
 
 #define   OLED_GPIO_CLK_ENABLE()	__HAL_RCC_GPIOB_CLK_ENABLE()
 #define   GPIOx_OLED_PORT					GPIOB

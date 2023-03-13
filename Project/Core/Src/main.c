@@ -27,6 +27,8 @@
 /* USER CODE BEGIN Includes */
 #include "oled.h"
 #include "ds18b20.h"
+#include "buzzer.h"
+#include "light.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -68,7 +70,13 @@ void SystemClock_Config(void);
 int main(void)
 {
   /* USER CODE BEGIN 1 */
-
+	uint8_t x = 0;
+	uint8_t y = 0;
+	float tempratureValue;
+	uint8_t tempratureValueInteger;
+	uint8_t tempratureValueDecimal;
+	uint8_t tempratureLimitHigh = 60;
+	uint8_t tempratureLimitLow = 10;
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -90,16 +98,52 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   MX_I2C1_Init();
-  MX_TIM6_Init();
+  MX_TIM1_Init();
   MX_USART1_UART_Init();
   /* USER CODE BEGIN 2 */
-
+	OLED_Init();
+	OLED_Clear();
+	OLED_ShowChinese(x + 16 * 1, y, 0);
+	OLED_ShowChinese(x + 16 * 2, y, 1);
+	OLED_ShowChinese(x + 16 * 3, y, 2);
+	OLED_ShowChinese(x + 16 * 4, y, 3);
+	OLED_ShowChinese(x + 16 * 5, y, 4);
+	OLED_ShowChinese(x + 16 * 6, y, 5);
+	OLED_ShowChinese(x, y + 2 * 2, 6);
+	OLED_ShowChinese(x + 16 * 1, y + 2 * 2, 7);
+	OLED_ShowChinese(x + 16 * 2, y + 2 * 2, 0);
+	OLED_ShowChinese(x + 16 * 3, y + 2 * 2, 1);
+	OLED_ShowChar(x + 16 * 4, y + 2 * 2, ':', 16);
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+		tempratureValue = DS18B20_GetTemperture();
+		tempratureValueInteger = (int)tempratureValue;
+		tempratureValueDecimal = 10 * (tempratureValue - (int)tempratureValue);
+		
+		OLED_ShowNum(x + 16 * 4 + 8 * 1, y + 2 * 2, tempratureValueInteger, 2, 16);
+		OLED_ShowChar(x + 16 * 5 + 8 * 1, y + 2 * 2, '.', 16);
+		OLED_ShowNum(x + 16 * 5 + 8 * 2, y + 2 * 2, tempratureValueDecimal, 1, 16);
+		OLED_ShowChar(x + 16 * 5 + 8 * 3, y + 2 * 2, 'C', 16);
+		
+		if(tempratureValue>tempratureLimitHigh)
+		{
+			redLight();
+			buzzerWarning();
+		}
+		else if(tempratureValue<tempratureLimitLow)
+		{
+			yellowLight();
+			buzzerWarning();
+		}
+		else
+		{
+			greenLight();
+			stopBuzzer();
+		}
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -116,23 +160,16 @@ void SystemClock_Config(void)
   RCC_OscInitTypeDef RCC_OscInitStruct = {0};
   RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
 
-  /** Configure the main internal regulator output voltage
-  */
-  __HAL_RCC_PWR_CLK_ENABLE();
-  __HAL_PWR_VOLTAGESCALING_CONFIG(PWR_REGULATOR_VOLTAGE_SCALE1);
-
   /** Initializes the RCC Oscillators according to the specified parameters
   * in the RCC_OscInitTypeDef structure.
   */
-  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI;
+  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSE;
+  RCC_OscInitStruct.HSEState = RCC_HSE_ON;
+  RCC_OscInitStruct.HSEPredivValue = RCC_HSE_PREDIV_DIV1;
   RCC_OscInitStruct.HSIState = RCC_HSI_ON;
-  RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_DEFAULT;
   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
-  RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSI;
-  RCC_OscInitStruct.PLL.PLLM = 8;
-  RCC_OscInitStruct.PLL.PLLN = 168;
-  RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV2;
-  RCC_OscInitStruct.PLL.PLLQ = 4;
+  RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSE;
+  RCC_OscInitStruct.PLL.PLLMUL = RCC_PLL_MUL9;
   if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
   {
     Error_Handler();
@@ -144,10 +181,10 @@ void SystemClock_Config(void)
                               |RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2;
   RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
   RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
-  RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV4;
-  RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV2;
+  RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV2;
+  RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV1;
 
-  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_5) != HAL_OK)
+  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_2) != HAL_OK)
   {
     Error_Handler();
   }

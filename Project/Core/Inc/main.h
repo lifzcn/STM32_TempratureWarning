@@ -27,7 +27,7 @@ extern "C" {
 #endif
 
 /* Includes ------------------------------------------------------------------*/
-#include "stm32f4xx_hal.h"
+#include "stm32f1xx_hal.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -57,22 +57,16 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
-#define Buzzer_Pin GPIO_PIN_2
-#define Buzzer_GPIO_Port GPIOE
-#define LED_Red_Pin GPIO_PIN_3
-#define LED_Red_GPIO_Port GPIOE
-#define LED_Yellow_Pin GPIO_PIN_4
-#define LED_Yellow_GPIO_Port GPIOE
-#define LED_Green_Pin GPIO_PIN_5
-#define LED_Green_GPIO_Port GPIOE
-#define DS18B20_Pin GPIO_PIN_6
-#define DS18B20_GPIO_Port GPIOE
-#define GND_LED_Red_Pin GPIO_PIN_0
-#define GND_LED_Red_GPIO_Port GPIOC
-#define GND_LED_Yellow_Pin GPIO_PIN_1
-#define GND_LED_Yellow_GPIO_Port GPIOC
-#define GND_LED_Green_Pin GPIO_PIN_2
-#define GND_LED_Green_GPIO_Port GPIOC
+#define Buzzer_Pin GPIO_PIN_3
+#define Buzzer_GPIO_Port GPIOA
+#define DS18B20_Pin GPIO_PIN_4
+#define DS18B20_GPIO_Port GPIOA
+#define LED_Red_Pin GPIO_PIN_5
+#define LED_Red_GPIO_Port GPIOA
+#define LED_Green_Pin GPIO_PIN_6
+#define LED_Green_GPIO_Port GPIOA
+#define LED_Yellow_Pin GPIO_PIN_7
+#define LED_Yellow_GPIO_Port GPIOA
 
 /* USER CODE BEGIN Private defines */
 
