@@ -25,6 +25,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include "stdio.h"
 #include "oled.h"
 #include "ds18b20.h"
 #include "buzzer.h"
@@ -114,6 +115,8 @@ int main(void)
 	OLED_ShowChinese(x + 16 * 2, y + 2 * 2, 0);
 	OLED_ShowChinese(x + 16 * 3, y + 2 * 2, 1);
 	OLED_ShowChar(x + 16 * 4, y + 2 * 2, ':', 16);
+
+	printf("Hello\r\n");
   /* USER CODE END 2 */
 
   /* Infinite loop */
